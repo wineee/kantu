@@ -70,3 +70,15 @@ char *path_dirname(const char *path)
         dirname[len] = 0;
         return dirname;
 }
+
+int format_size(char buf[16], size_t size)
+{
+        const char *units[] = { "B", "KB", "MB", "GB", "TB" };
+        int i = 0;
+
+        while (size >= 1024) {
+                size /= 1024;
+                i++;
+        }
+        return snprintf(buf, 16, "%zu %s", size, units[i]);
+}
