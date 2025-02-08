@@ -3,10 +3,7 @@
 int main(int argc, char *argv[])
 {
         app_init();
-
-        // Write code here to initialize your application,
-        // such as loading configuration files, initializing functional modules
-        // ...
-
+        ui_widget_set_title(ui_root(), L"Kantu");
+        ui_widget_append(ui_root(), ui_create_home());
         return app_run();
 }
