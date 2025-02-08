@@ -9,3 +9,5 @@ char *path_dirname(const char *path);
 char *path_join(const char *dir, const char *name);
 
 int format_size(char buf[16], size_t size);
+
+char *path_from(const char *str);

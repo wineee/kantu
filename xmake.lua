@@ -11,6 +11,9 @@ target("kantu")
         add_rules("win.sdk.application")
         add_files("version.rc")
     end
+    if is_mode("debug") then
+        add_defines("DEBUG")
+    end
     set_configdir("include")
     set_rundir("dist")
     add_deps("lcui")
