@@ -19,7 +19,14 @@ import "./global.css";
 export default function ImageView() {
   return (
     <Widget className="image-view">
-      <Widget $ref="content" className="content">
+      <Widget
+        $ref="content"
+        className="content"
+        onMouseUp="image_view_on_mouseup"
+        onMouseDown="image_view_on_mousedown"
+        onMouseWheel="image_view_on_mousewheel"
+        onMouseMove="image_view_on_mousemove"
+      >
         <Widget className="progress">
           <Widget $ref="progressbar" className="bar" />
         </Widget>
