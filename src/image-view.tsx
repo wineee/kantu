@@ -35,10 +35,20 @@ export default function ImageView() {
           <Text $ref="filename" />
           <Text>似乎不支持此文件格式。</Text>
         </Widget>
-        <Widget $ref="prev" className="switch-button prev">
+        <Widget
+          $ref="prev"
+          className="switch-button prev"
+          onMouseDown="image_view_on_prev_mousedown"
+          onClick="image_view_on_prev"
+        >
           <TriangleLeftFilled />
         </Widget>
-        <Widget $ref="next" className="switch-button next">
+        <Widget
+          $ref="next"
+          className="switch-button next"
+          onMouseDown="image_view_on_next_mousedown"
+          onClick="image_view_on_next"
+        >
           <TriangleRightFilled />
         </Widget>
       </Widget>

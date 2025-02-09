@@ -44,15 +44,15 @@ typedef struct {
         ui_widget_t *prev;
         ui_widget_t *ref_6;
         ui_widget_t *next;
-        ui_widget_t *ref_8;
-        ui_widget_t *ref_13;
-        ui_widget_t *ref_14;
-        ui_widget_t *ref_15;
-        ui_widget_t *image_size;
+        ui_widget_t *ref_10;
         ui_widget_t *ref_17;
+        ui_widget_t *ref_18;
+        ui_widget_t *ref_19;
+        ui_widget_t *image_size;
+        ui_widget_t *ref_21;
         ui_widget_t *file_size;
         ui_widget_t *percentage;
-        ui_widget_t *ref_20;
+        ui_widget_t *ref_24;
         ui_widget_t *zoom_out;
         ui_widget_t *zoom_in;
         ui_widget_t *maximize;
@@ -105,47 +105,47 @@ static void image_view_load_template(ui_widget_t *parent, image_view_refs_t *ref
         ui_widget_append(refs->prev, refs->ref_6);
         refs->next = ui_create_widget(NULL);
         ui_widget_add_class(refs->next, "switch-button next");
-        refs->ref_8 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_8, "fui-icon-filled");
-        ui_widget_set_text(refs->ref_8, (const char*)widget_text_3);
-        ui_widget_append(refs->next, refs->ref_8);
+        refs->ref_10 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_10, "fui-icon-filled");
+        ui_widget_set_text(refs->ref_10, (const char*)widget_text_3);
+        ui_widget_append(refs->next, refs->ref_10);
         ui_widget_append(refs->content, w[0]);
         ui_widget_append(refs->content, refs->tip);
         ui_widget_append(refs->content, refs->prev);
         ui_widget_append(refs->content, refs->next);
         w[2] = ui_create_widget(NULL);
         ui_widget_add_class(w[2], "toolbar");
-        refs->ref_13 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_13, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->ref_13, (const char*)widget_text_4);
+        refs->ref_17 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_17, "fui-icon-regular icon button");
+        ui_widget_set_text(refs->ref_17, (const char*)widget_text_4);
         w[3] = ui_create_widget(NULL);
         ui_widget_add_class(w[3], "divider");
-        refs->ref_14 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_14, "fui-icon-regular icon button mr-1");
-        ui_widget_set_text(refs->ref_14, (const char*)widget_text_5);
+        refs->ref_18 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_18, "fui-icon-regular icon button mr-1");
+        ui_widget_set_text(refs->ref_18, (const char*)widget_text_5);
         w[4] = ui_create_widget(NULL);
         ui_widget_add_class(w[4], "file-info");
-        refs->ref_15 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_15, "fui-icon-regular mr-2");
-        ui_widget_set_text(refs->ref_15, (const char*)widget_text_6);
+        refs->ref_19 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_19, "fui-icon-regular mr-2");
+        ui_widget_set_text(refs->ref_19, (const char*)widget_text_6);
         refs->image_size = ui_create_widget("text");
         ui_widget_add_class(refs->image_size, "mr-4");
         ui_widget_set_text(refs->image_size, (const char*)widget_text_7);
-        refs->ref_17 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_17, "fui-icon-regular mr-2");
-        ui_widget_set_text(refs->ref_17, (const char*)widget_text_8);
+        refs->ref_21 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_21, "fui-icon-regular mr-2");
+        ui_widget_set_text(refs->ref_21, (const char*)widget_text_8);
         refs->file_size = ui_create_widget("text");
         ui_widget_set_text(refs->file_size, (const char*)widget_text_9);
-        ui_widget_append(w[4], refs->ref_15);
+        ui_widget_append(w[4], refs->ref_19);
         ui_widget_append(w[4], refs->image_size);
-        ui_widget_append(w[4], refs->ref_17);
+        ui_widget_append(w[4], refs->ref_21);
         ui_widget_append(w[4], refs->file_size);
         refs->percentage = ui_create_widget("text");
         ui_widget_add_class(refs->percentage, "px-2");
         ui_widget_set_text(refs->percentage, (const char*)widget_text_10);
-        refs->ref_20 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_20, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->ref_20, (const char*)widget_text_11);
+        refs->ref_24 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_24, "fui-icon-regular icon button");
+        ui_widget_set_text(refs->ref_24, (const char*)widget_text_11);
         refs->zoom_out = ui_create_widget("text");
         ui_widget_add_class(refs->zoom_out, "fui-icon-regular icon button");
         ui_widget_set_text(refs->zoom_out, (const char*)widget_text_12);
@@ -157,12 +157,12 @@ static void image_view_load_template(ui_widget_t *parent, image_view_refs_t *ref
         refs->maximize = ui_create_widget("text");
         ui_widget_add_class(refs->maximize, "fui-icon-regular icon button");
         ui_widget_set_text(refs->maximize, (const char*)widget_text_14);
-        ui_widget_append(w[2], refs->ref_13);
+        ui_widget_append(w[2], refs->ref_17);
         ui_widget_append(w[2], w[3]);
-        ui_widget_append(w[2], refs->ref_14);
+        ui_widget_append(w[2], refs->ref_18);
         ui_widget_append(w[2], w[4]);
         ui_widget_append(w[2], refs->percentage);
-        ui_widget_append(w[2], refs->ref_20);
+        ui_widget_append(w[2], refs->ref_24);
         ui_widget_append(w[2], refs->zoom_out);
         ui_widget_append(w[2], refs->zoom_in);
         ui_widget_append(w[2], w[5]);
@@ -176,6 +176,14 @@ static void image_view_react_update(ui_widget_t *w)
         image_view_react_t *_that = ui_widget_get_data(w, image_view_proto);
 }
 
+static void image_view_on_prev_mousedown(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_prev(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_next_mousedown(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_next(ui_widget_t *w, ui_event_t *e, void *arg);
+
 static void image_view_on_mouseup(ui_widget_t *w, ui_event_t *e, void *arg);
 
 static void image_view_on_mousedown(ui_widget_t *w, ui_event_t *e, void *arg);
@@ -187,6 +195,10 @@ static void image_view_on_mousemove(ui_widget_t *w, ui_event_t *e, void *arg);
 static void image_view_react_init_events(ui_widget_t *w)
 {
         image_view_react_t *_that = ui_widget_get_data(w, image_view_proto);
+        ui_widget_on(_that->refs.prev, "mousedown", image_view_on_prev_mousedown, w);
+        ui_widget_on(_that->refs.prev, "click", image_view_on_prev, w);
+        ui_widget_on(_that->refs.next, "mousedown", image_view_on_next_mousedown, w);
+        ui_widget_on(_that->refs.next, "click", image_view_on_next, w);
         ui_widget_on(_that->refs.content, "mouseup", image_view_on_mouseup, w);
         ui_widget_on(_that->refs.content, "mousedown", image_view_on_mousedown, w);
         ui_widget_on(_that->refs.content, "mousewheel", image_view_on_mousewheel, w);

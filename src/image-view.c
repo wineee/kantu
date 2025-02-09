@@ -4,11 +4,13 @@
 #include "image-view.tsx.h"
 #include "image-view.h"
 #include "image-controller.h"
+#include "image-collector.h"
 #include "utils.h"
 
 typedef struct {
         image_view_react_t base;
         image_controller_t controller;
+        image_collector_t *collector;
         float mouse_x, mouse_y;
         float mouse_offset_x, mouse_offset_y;
         bool dragging;
@@ -31,6 +33,12 @@ static void image_view_on_keydown(ui_widget_t *root, ui_event_t *e, void *arg)
         case KEY_MINUS:
                 image_controller_zoom_out(&view->controller);
                 break;
+        case KEY_LEFT:
+                image_collector_prev(view->collector);
+                break;
+        case KEY_RIGHT:
+                image_collector_next(view->collector);
+                break;
         default:
                 return;
         }
@@ -43,6 +51,18 @@ static void image_view_on_mutation(ui_mutation_list_t *list,
         image_view_reset(arg);
 }
 
+static void image_view_on_load_file(ui_widget_t *w, const char *file);
+
+static void image_view_on_collector_event(image_collector_t *c,
+                                          image_collector_event_type_t type,
+                                          void *arg)
+{
+        if (type == IMAGE_COLLECTOR_EVENT_OPEN) {
+                image_view_on_load_file(arg, image_collector_get_file(c));
+        }
+        image_view_update(arg);
+}
+
 static void image_view_init(ui_widget_t *w)
 {
         image_view_t *view =
@@ -52,6 +72,9 @@ static void image_view_init(ui_widget_t *w)
 
         image_view_react_init(w);
         image_controller_init(&view->controller);
+        view->collector = image_collector_create();
+        image_collector_listen(view->collector, image_view_on_collector_event,
+                               w);
         image_view_update(w);
         ui_widget_on(ui_root(), "keydown", image_view_on_keydown, w);
 
@@ -65,6 +88,7 @@ static void image_view_destroy(ui_widget_t *w)
         image_view_t *view = image_view_get(w);
         image_view_react_destroy(w);
         image_controller_destroy(&view->controller);
+        image_collector_destroy(view->collector);
 }
 
 void image_view_update(ui_widget_t *w)
@@ -97,6 +121,16 @@ void image_view_update(ui_widget_t *w)
                 ui_widget_hide(refs->tip);
         } else {
                 ui_widget_show(refs->tip);
+        }
+        if (image_collector_has_prev(view->collector)) {
+                ui_widget_show(refs->prev);
+        } else {
+                ui_widget_hide(refs->prev);
+        }
+        if (image_collector_has_next(view->collector)) {
+                ui_widget_show(refs->next);
+        } else {
+                ui_widget_hide(refs->next);
         }
         image_view_react_update(w);
 }
@@ -188,7 +222,38 @@ static void image_view_on_mousewheel(ui_widget_t *w, ui_event_t *e, void *arg)
         image_view_update(e->data);
 }
 
+static void image_view_on_prev_mousedown(ui_widget_t *w, ui_event_t *e,
+                                         void *arg)
+{
+        e->cancel_bubble = true;
+}
+
+static void image_view_on_next_mousedown(ui_widget_t *w, ui_event_t *e,
+                                         void *arg)
+{
+        e->cancel_bubble = true;
+}
+
+static void image_view_on_next(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+        image_collector_next(view->collector);
+}
+
+static void image_view_on_prev(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+        image_collector_prev(view->collector);
+}
+
 void image_view_load_file(ui_widget_t *w, const char *file)
+{
+        image_view_t *view = image_view_get(w);
+
+        image_collector_load_file(view->collector, file);
+}
+
+static void image_view_on_load_file(ui_widget_t *w, const char *file)
 {
         char *url;
         image_view_t *view = image_view_get(w);
