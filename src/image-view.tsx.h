@@ -58,6 +58,7 @@ typedef struct {
         ui_widget_t *ref_25;
         ui_widget_t *ref_26;
         ui_widget_t *zoom_out;
+        ui_widget_t *slider;
         ui_widget_t *zoom_in;
         ui_widget_t *maximize;
 } image_view_refs_t;
@@ -160,6 +161,8 @@ static void image_view_load_template(ui_widget_t *parent, image_view_refs_t *ref
         refs->zoom_out = ui_create_widget("text");
         ui_widget_add_class(refs->zoom_out, "fui-icon-regular icon button");
         ui_widget_set_text(refs->zoom_out, (const char*)widget_text_13);
+        refs->slider = ui_create_widget("slider");
+        ui_widget_add_class(refs->slider, "w-[200px]");
         refs->zoom_in = ui_create_widget("text");
         ui_widget_add_class(refs->zoom_in, "fui-icon-regular icon button");
         ui_widget_set_text(refs->zoom_in, (const char*)widget_text_14);
@@ -175,6 +178,7 @@ static void image_view_load_template(ui_widget_t *parent, image_view_refs_t *ref
         ui_widget_append(w[2], refs->percentage);
         ui_widget_append(w[2], refs->toggle_fit);
         ui_widget_append(w[2], refs->zoom_out);
+        ui_widget_append(w[2], refs->slider);
         ui_widget_append(w[2], refs->zoom_in);
         ui_widget_append(w[2], w[5]);
         ui_widget_append(w[2], refs->maximize);
@@ -207,6 +211,8 @@ static void image_view_on_fit(ui_widget_t *w, ui_event_t *e, void *arg);
 
 static void image_view_on_zoom_out(ui_widget_t *w, ui_event_t *e, void *arg);
 
+static void image_view_on_slider_change(ui_widget_t *w, ui_event_t *e, void *arg);
+
 static void image_view_on_zoom_in(ui_widget_t *w, ui_event_t *e, void *arg);
 
 static void image_view_on_maximize(ui_widget_t *w, ui_event_t *e, void *arg);
@@ -224,6 +230,7 @@ static void image_view_react_init_events(ui_widget_t *w)
         ui_widget_on(_that->refs.content, "mousemove", image_view_on_mousemove, w);
         ui_widget_on(_that->refs.toggle_fit, "click", image_view_on_fit, w);
         ui_widget_on(_that->refs.zoom_out, "click", image_view_on_zoom_out, w);
+        ui_widget_on(_that->refs.slider, "change", image_view_on_slider_change, w);
         ui_widget_on(_that->refs.zoom_in, "click", image_view_on_zoom_in, w);
         ui_widget_on(_that->refs.maximize, "click", image_view_on_maximize, w);
 }

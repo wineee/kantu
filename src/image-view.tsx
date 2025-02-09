@@ -15,6 +15,7 @@ import {
 } from "@lcui/react-icons";
 import "@lcui/react-icons/dist/style.css";
 import ToggleButton from "./toggle-button";
+import Slider from "./slider";
 import "./image-view.scss";
 import "./global.css";
 
@@ -81,6 +82,12 @@ export default function ImageView() {
           $ref="zoom_out"
           className="icon button"
           onClick="image_view_on_zoom_out"
+        />
+
+        <Slider
+          $ref="slider"
+          className="w-[200px]"
+          onChange="image_view_on_slider_change"
         />
         <ZoomIn
           $ref="zoom_in"

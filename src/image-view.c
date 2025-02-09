@@ -8,6 +8,7 @@
 #include "image-collector.h"
 #include "file-info-reader.h"
 #include "toggle-button.h"
+#include "slider.h"
 #include "utils.h"
 
 typedef struct {
@@ -23,6 +24,14 @@ typedef struct {
 static image_view_t *image_view_get(ui_widget_t *w)
 {
         return ui_widget_get_data(w, image_view_proto);
+}
+
+static void image_view_on_slider_change(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+        image_controller_set_scale(&view->controller,
+                                   (float)(slider_get_value(w) / 100.0));
+        image_view_update(e->data);
 }
 
 static void image_view_on_keydown(ui_widget_t *root, ui_event_t *e, void *arg)
@@ -121,6 +130,8 @@ static void image_view_init(ui_widget_t *w)
         view->reader = file_info_reader_create(image_view_on_load_file_info, w);
         image_collector_listen(view->collector, image_view_on_collector_event,
                                w);
+        slider_set_min(view->base.refs.slider, 10);
+        slider_set_max(view->base.refs.slider, 800);
         image_view_update(w);
         ui_widget_on(ui_root(), "keydown", image_view_on_keydown, w);
 
@@ -165,11 +176,13 @@ void image_view_update(ui_widget_t *w)
                 ui_widget_set_style_unit_value(refs->content,
                                                css_prop_background_position_y,
                                                c->image_offset_y, CSS_UNIT_PX);
+                slider_set_value(refs->slider, c->scale * 100.0);
         } else {
                 ui_widget_set_style_string(refs->content, "background-size",
                                            "contain");
                 ui_widget_set_style_string(refs->content, "background-position",
                                            "center");
+                slider_set_value(refs->slider, 100.0);
         }
         ui_text_set_content(refs->percentage, percentage_str);
         toggle_button_set_checked(refs->toggle_fit,

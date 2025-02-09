@@ -3,6 +3,7 @@
 #include <LCUI/main.h>
 #include "home.h"
 #include "image-view.h"
+#include "slider.h"
 #include "toggle-button.h"
 
 static void app_init(void)
@@ -10,9 +11,11 @@ static void app_init(void)
         lcui_init();
         ui_load_home_resources();
         ui_load_image_view_resources();
+        ui_load_slider_resources();
         ui_load_toggle_button_resources();
         ui_register_home();
         ui_register_image_view();
+        ui_register_slider();
         ui_register_toggle_button();
 }
 
