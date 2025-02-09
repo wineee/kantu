@@ -28,12 +28,14 @@ static const unsigned char widget_text_9[] = {0x30, 0x20, 0x4b, 0x42, 0};
 static const unsigned char widget_text_10[] = {0x31, 0x30, 0x30, 0x25, 0};
 // UTF-8 encoded string from: %EF%96%8E
 static const unsigned char widget_text_11[] = {0xef, 0x96, 0x8e, 0};
+// UTF-8 encoded string from: %EF%96%98
+static const unsigned char widget_text_12[] = {0xef, 0x96, 0x98, 0};
 // UTF-8 encoded string from: %EE%BA%8F
-static const unsigned char widget_text_12[] = {0xee, 0xba, 0x8f, 0};
+static const unsigned char widget_text_13[] = {0xee, 0xba, 0x8f, 0};
 // UTF-8 encoded string from: %EE%BA%8E
-static const unsigned char widget_text_13[] = {0xee, 0xba, 0x8e, 0};
+static const unsigned char widget_text_14[] = {0xee, 0xba, 0x8e, 0};
 // UTF-8 encoded string from: %EF%85%9E
-static const unsigned char widget_text_14[] = {0xef, 0x85, 0x9e, 0};
+static const unsigned char widget_text_15[] = {0xef, 0x85, 0x9e, 0};
 
 typedef struct {
         ui_widget_t *content;
@@ -52,7 +54,9 @@ typedef struct {
         ui_widget_t *ref_21;
         ui_widget_t *file_size;
         ui_widget_t *percentage;
-        ui_widget_t *ref_24;
+        ui_widget_t *toggle_fit;
+        ui_widget_t *ref_25;
+        ui_widget_t *ref_26;
         ui_widget_t *zoom_out;
         ui_widget_t *zoom_in;
         ui_widget_t *maximize;
@@ -143,26 +147,33 @@ static void image_view_load_template(ui_widget_t *parent, image_view_refs_t *ref
         refs->percentage = ui_create_widget("text");
         ui_widget_add_class(refs->percentage, "px-2");
         ui_widget_set_text(refs->percentage, (const char*)widget_text_10);
-        refs->ref_24 = ui_create_widget("text");
-        ui_widget_add_class(refs->ref_24, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->ref_24, (const char*)widget_text_11);
+        refs->toggle_fit = ui_create_widget("toggle_button");
+        ui_widget_add_class(refs->toggle_fit, "button");
+        refs->ref_25 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_25, "fui-icon-regular icon");
+        ui_widget_set_text(refs->ref_25, (const char*)widget_text_11);
+        refs->ref_26 = ui_create_widget("text");
+        ui_widget_add_class(refs->ref_26, "fui-icon-filled icon");
+        ui_widget_set_text(refs->ref_26, (const char*)widget_text_12);
+        ui_widget_append(refs->toggle_fit, refs->ref_25);
+        ui_widget_append(refs->toggle_fit, refs->ref_26);
         refs->zoom_out = ui_create_widget("text");
         ui_widget_add_class(refs->zoom_out, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->zoom_out, (const char*)widget_text_12);
+        ui_widget_set_text(refs->zoom_out, (const char*)widget_text_13);
         refs->zoom_in = ui_create_widget("text");
         ui_widget_add_class(refs->zoom_in, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->zoom_in, (const char*)widget_text_13);
+        ui_widget_set_text(refs->zoom_in, (const char*)widget_text_14);
         w[5] = ui_create_widget(NULL);
         ui_widget_add_class(w[5], "divider");
         refs->maximize = ui_create_widget("text");
         ui_widget_add_class(refs->maximize, "fui-icon-regular icon button");
-        ui_widget_set_text(refs->maximize, (const char*)widget_text_14);
+        ui_widget_set_text(refs->maximize, (const char*)widget_text_15);
         ui_widget_append(w[2], refs->ref_17);
         ui_widget_append(w[2], w[3]);
         ui_widget_append(w[2], refs->ref_18);
         ui_widget_append(w[2], w[4]);
         ui_widget_append(w[2], refs->percentage);
-        ui_widget_append(w[2], refs->ref_24);
+        ui_widget_append(w[2], refs->toggle_fit);
         ui_widget_append(w[2], refs->zoom_out);
         ui_widget_append(w[2], refs->zoom_in);
         ui_widget_append(w[2], w[5]);
@@ -192,6 +203,14 @@ static void image_view_on_mousewheel(ui_widget_t *w, ui_event_t *e, void *arg);
 
 static void image_view_on_mousemove(ui_widget_t *w, ui_event_t *e, void *arg);
 
+static void image_view_on_fit(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_zoom_out(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_zoom_in(ui_widget_t *w, ui_event_t *e, void *arg);
+
+static void image_view_on_maximize(ui_widget_t *w, ui_event_t *e, void *arg);
+
 static void image_view_react_init_events(ui_widget_t *w)
 {
         image_view_react_t *_that = ui_widget_get_data(w, image_view_proto);
@@ -203,6 +222,10 @@ static void image_view_react_init_events(ui_widget_t *w)
         ui_widget_on(_that->refs.content, "mousedown", image_view_on_mousedown, w);
         ui_widget_on(_that->refs.content, "mousewheel", image_view_on_mousewheel, w);
         ui_widget_on(_that->refs.content, "mousemove", image_view_on_mousemove, w);
+        ui_widget_on(_that->refs.toggle_fit, "click", image_view_on_fit, w);
+        ui_widget_on(_that->refs.zoom_out, "click", image_view_on_zoom_out, w);
+        ui_widget_on(_that->refs.zoom_in, "click", image_view_on_zoom_in, w);
+        ui_widget_on(_that->refs.maximize, "click", image_view_on_maximize, w);
 }
 
 static void image_view_react_init(ui_widget_t *w)

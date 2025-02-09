@@ -6,6 +6,7 @@ import {
   ZoomIn,
   ArrowMaximize,
   PageFit,
+  PageFitFilled,
   Save,
   ResizeImage,
   TableBottomRow,
@@ -13,6 +14,7 @@ import {
   Image,
 } from "@lcui/react-icons";
 import "@lcui/react-icons/dist/style.css";
+import ToggleButton from "./toggle-button";
 import "./image-view.scss";
 import "./global.css";
 
@@ -67,11 +69,30 @@ export default function ImageView() {
         <Text $ref="percentage" className="px-2">
           100%
         </Text>
-        <PageFit className="icon button" />
-        <ZoomOut $ref="zoom_out" className="icon button" />
-        <ZoomIn $ref="zoom_in" className="icon button" />
+        <ToggleButton
+          $ref="toggle_fit"
+          className="button"
+          onClick="image_view_on_fit"
+        >
+          <PageFit className="icon" />
+          <PageFitFilled className="icon" />
+        </ToggleButton>
+        <ZoomOut
+          $ref="zoom_out"
+          className="icon button"
+          onClick="image_view_on_zoom_out"
+        />
+        <ZoomIn
+          $ref="zoom_in"
+          className="icon button"
+          onClick="image_view_on_zoom_in"
+        />
         <Widget className="divider" />
-        <ArrowMaximize $ref="maximize" className="icon button" />
+        <ArrowMaximize
+          $ref="maximize"
+          className="icon button"
+          onClick="image_view_on_maximize"
+        />
       </Widget>
     </Widget>
   );

@@ -152,3 +152,9 @@
     border-left: 1px solid #fff;
   }
 }
+
+.maximized {
+  .toolbar {
+    display: none;
+  }
+}

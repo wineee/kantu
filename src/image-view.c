@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <ptk.h>
 #include <LCUI/widgets.h>
+#include <LCUI/ui.h>
 #include "image-view.tsx.h"
 #include "image-view.h"
 #include "image-controller.h"
 #include "image-collector.h"
+#include "file-info-reader.h"
+#include "toggle-button.h"
 #include "utils.h"
 
 typedef struct {
         image_view_react_t base;
         image_controller_t controller;
         image_collector_t *collector;
+        file_info_reader_t *reader;
         float mouse_x, mouse_y;
         float mouse_offset_x, mouse_offset_y;
         bool dragging;
@@ -39,6 +43,11 @@ static void image_view_on_keydown(ui_widget_t *root, ui_event_t *e, void *arg)
         case KEY_RIGHT:
                 image_collector_next(view->collector);
                 break;
+        case KEY_ESCAPE:
+                if (ui_widget_has_class(w, "maximized")) {
+                        image_view_restore(w);
+                }
+                break;
         default:
                 return;
         }
@@ -63,6 +72,42 @@ static void image_view_on_collector_event(image_collector_t *c,
         image_view_update(arg);
 }
 
+static void image_view_on_load_file_info(file_info_t *info, void *arg)
+{
+        image_view_update(arg);
+}
+
+static void image_view_on_zoom_in(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+        image_controller_zoom_in(&view->controller);
+        image_view_update(e->data);
+}
+
+static void image_view_on_zoom_out(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+        image_controller_zoom_out(&view->controller);
+        image_view_update(e->data);
+}
+
+static void image_view_on_fit(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+
+        if (image_controller_can_zoom_to_fit(&view->controller)) {
+                image_controller_zoom_to_fit(&view->controller);
+        } else {
+                image_controller_set_scale(&view->controller, 1.0f);
+        }
+        image_view_update(e->data);
+}
+
+static void image_view_on_maximize(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_maximize(e->data);
+}
+
 static void image_view_init(ui_widget_t *w)
 {
         image_view_t *view =
@@ -73,6 +118,7 @@ static void image_view_init(ui_widget_t *w)
         image_view_react_init(w);
         image_controller_init(&view->controller);
         view->collector = image_collector_create();
+        view->reader = file_info_reader_create(image_view_on_load_file_info, w);
         image_collector_listen(view->collector, image_view_on_collector_event,
                                w);
         image_view_update(w);
@@ -89,20 +135,29 @@ static void image_view_destroy(ui_widget_t *w)
         image_view_react_destroy(w);
         image_controller_destroy(&view->controller);
         image_collector_destroy(view->collector);
+        file_info_reader_destroy(view->reader);
 }
 
 void image_view_update(ui_widget_t *w)
 {
         char size_str[64];
+        char percentage_str[8] = "100%";
         image_view_t *view = image_view_get(w);
         image_controller_t *c = &view->controller;
         image_view_refs_t *refs = &view->base.refs;
+        file_info_t *info = file_info_reader_get_info(view->reader);
 
+        ui_widget_set_disabled(refs->zoom_in, !image_controller_can_zoom_in(c));
+        ui_widget_set_disabled(refs->zoom_out,
+                               !image_controller_can_zoom_out(c));
+        ui_text_set_content(refs->file_size, info->file_size);
+        ui_text_set_content(refs->image_size, info->image_size);
         if (ui_image_valid(c->image)) {
+                snprintf(percentage_str, 7, "%d%%", (int)(c->scale * 100));
                 snprintf(size_str, 31, "%gpx %gpx",
                          c->scale * c->image->data.width,
                          c->scale * c->image->data.height);
-                ui_widget_set_style_string(view->base.refs.content,
+                ui_widget_set_style_string(refs->content,
                                            "background-size", size_str);
                 ui_widget_set_style_unit_value(refs->content,
                                                css_prop_background_position_x,
@@ -116,6 +171,9 @@ void image_view_update(ui_widget_t *w)
                 ui_widget_set_style_string(refs->content, "background-position",
                                            "center");
         }
+        ui_text_set_content(refs->percentage, percentage_str);
+        toggle_button_set_checked(refs->toggle_fit,
+                                  !image_controller_can_zoom_to_fit(&view->controller));
         if (!c->image || c->image->state != UI_IMAGE_STATE_COMPLETE ||
             c->image->error == PD_OK) {
                 ui_widget_hide(refs->tip);
@@ -263,7 +321,7 @@ static void image_view_on_load_file(ui_widget_t *w, const char *file)
 
         title[255] = 0;
         ui_widget_set_title(ui_root(), title);
-
+        file_info_reader_load_file(view->reader, file);
         if (c->image) {
                 ui_image_off_load(c->image, image_view_on_image_event, w);
                 ui_image_off_error(c->image, image_view_on_image_event, w);
@@ -286,6 +344,18 @@ static void image_view_on_load_file(ui_widget_t *w, const char *file)
         ui_widget_set_style_string(view->base.refs.content, "background-image",
                                    url);
         free(url);
+}
+
+void image_view_maximize(ui_widget_t *w)
+{
+        ui_widget_add_class(w, "maximized");
+        lcui_ui_set_display(LCUI_DISPLAY_FULLSCREEN);
+}
+
+void image_view_restore(ui_widget_t *w)
+{
+        ui_widget_remove_class(w, "maximized");
+        lcui_ui_set_display(LCUI_DISPLAY_DEFAULT);
 }
 
 void image_view_reset(ui_widget_t *w)

@@ -131,4 +131,8 @@ static const char *css_str_image_view = "\
   opacity: 0.5;\
   border-left: 1px solid #fff;\
 }\
+\
+.maximized .toolbar {\
+  display: none;\
+}\
 ";
