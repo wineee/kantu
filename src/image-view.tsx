@@ -10,6 +10,7 @@ import {
   ResizeImage,
   TableBottomRow,
   Info,
+  Image,
 } from "@lcui/react-icons";
 import "@lcui/react-icons/dist/style.css";
 import "./image-view.scss";
@@ -19,6 +20,14 @@ export default function ImageView() {
   return (
     <Widget className="image-view">
       <Widget $ref="content" className="content">
+        <Widget className="progress">
+          <Widget $ref="progressbar" className="bar" />
+        </Widget>
+        <Widget $ref="tip" className="tip">
+          <Image className="icon text-[80px]" />
+          <Text $ref="filename" />
+          <Text>似乎不支持此文件格式。</Text>
+        </Widget>
         <Widget $ref="prev" className="switch-button prev">
           <TriangleLeftFilled />
         </Widget>

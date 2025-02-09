@@ -81,6 +81,27 @@ static const char *css_str_image_view = "\
   justify-content: flex-start;\
 }\
 \
+.progress {\
+  height: 2px;\
+}\
+.progress .bar {\
+  height: 100%;\
+  background: #3b82f6;\
+}\
+\
+.tip {\
+  opacity: 0.8;\
+  display: flex;\
+  flex-direction: column;\
+}\
+.tip * {\
+  color: #fff;\
+  text-align: center;\
+}\
+.tip .icon {\
+  line-height: 1;\
+}\
+\
 .toolbar {\
   flex: none;\
   display: flex;\

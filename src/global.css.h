@@ -13,6 +13,9 @@ static const char *css_str_global = "\
   padding-left: 8px;\
   padding-right: 8px;\
 }\
+.text-\\[80px\\] {\
+  font-size: 80px;\
+}\
 * {\
   box-sizing: border-box;\
 }\
