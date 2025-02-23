@@ -10,6 +10,7 @@
 #include "toggle-button.h"
 #include "slider.h"
 #include "film-view.h"
+#include "file-info-panel.h"
 #include "utils.h"
 
 typedef struct {
@@ -118,6 +119,13 @@ static void image_view_on_maximize(ui_widget_t *w, ui_event_t *e, void *arg)
         image_view_maximize(e->data);
 }
 
+static void image_view_open_file_info_panel(ui_widget_t *w, ui_event_t *e, void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+
+        ui_widget_remove_class(view->base.refs.file_info_panel, "hidden");
+}
+
 static void image_view_init(ui_widget_t *w)
 {
         image_view_t *view =
@@ -161,6 +169,7 @@ void image_view_update(ui_widget_t *w)
         image_view_refs_t *refs = &view->base.refs;
         file_info_t *info = file_info_reader_get_info(view->reader);
 
+        file_info_panel_set_info(refs->file_info_panel, info);
         ui_widget_set_disabled(refs->zoom_in, !image_controller_can_zoom_in(c));
         ui_widget_set_disabled(refs->zoom_out,
                                !image_controller_can_zoom_out(c));

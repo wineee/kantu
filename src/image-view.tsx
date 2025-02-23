@@ -18,12 +18,14 @@ import "@lcui/react-icons/dist/style.css";
 import ToggleButton from "./toggle-button";
 import Slider from "./slider";
 import FilmView from "./film-view";
+import FileInfoPanel from "./file-info-panel";
 import "./image-view.scss";
 import "./global.css";
 
 export default function ImageView() {
   return (
     <Widget className="image-view">
+      <Widget className="main">
       <Widget
         $ref="content"
         className="content"
@@ -68,7 +70,10 @@ export default function ImageView() {
           <TableBottomRowFilled className="icon" />
         </ToggleButton>
         <Widget className="divider" />
-        <Info className="icon button mr-1" />
+        <Info
+          className="icon button mr-1"
+          onClick="image_view_open_file_info_panel"
+        />
         <Widget className="file-info">
           <ResizeImage className="mr-2" />
           <Text $ref="image_size" className="mr-4">
@@ -111,6 +116,11 @@ export default function ImageView() {
           onClick="image_view_on_maximize"
         />
       </Widget>
+    </Widget>
+    <FileInfoPanel
+      $ref="file_info_panel"
+      className="flex-none w-[360px] h-full"
+    />
     </Widget>
   );
 }

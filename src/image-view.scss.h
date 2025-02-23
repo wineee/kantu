@@ -2,10 +2,15 @@
 static const char *css_str_image_view = "\
 .image-view {\
   display: flex;\
-  flex-direction: column;\
   background: #1f1f1f;\
   width: 100%;\
   height: 100%;\
+}\
+.image-view .main {\
+  display: flex;\
+  height: 100%;\
+  flex: auto;\
+  flex-direction: column;\
 }\
 .image-view .content {\
   display: flex;\
@@ -15,7 +20,6 @@ static const char *css_str_image_view = "\
 }\
 .image-view text {\
   color: #fff;\
-  white-space: nowrap;\
 }\
 .image-view .button {\
   display: flex;\
@@ -117,6 +121,9 @@ static const char *css_str_image_view = "\
 }\
 .toolbar .button {\
   color: #fff;\
+}\
+.toolbar text {\
+  white-space: nowrap;\
 }\
 .toolbar .button,\
 .toolbar .icon {\
