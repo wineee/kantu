@@ -9,6 +9,9 @@ static const char *css_str_global = "\
 .mr-4 {\
   margin-right: 16px;\
 }\
+.hidden {\
+  display: none;\
+}\
 .w-\\[200px\\] {\
   width: 200px;\
 }\
@@ -30,5 +33,38 @@ static const char *css_str_global = "\
 }\
 * {\
   box-sizing: border-box;\
+}\
+\
+scrollbar-thumb {\
+  top: 2px;\
+  left: 2px;\
+  height: 6px;\
+  width: 6px;\
+  min-width: 6px;\
+  min-height: 6px;\
+  background: #a1a1aa;\
+  border-radius: 3px;\
+}\
+\
+scrollbar-track {\
+  background: #404040;\
+  padding: 2px;\
+}\
+\
+scrollbar-corner {\
+  width: 10px;\
+  height: 10px;\
+}\
+\
+scrollbar.vertical {\
+  width: 10px;\
+}\
+\
+scrollbar.horizontal {\
+  height: 10px;\
+}\
+\
+.has-horizontal-scrollbar {\
+  padding-bottom: 10px;\
 }\
 ";

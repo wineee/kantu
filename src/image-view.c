@@ -9,6 +9,7 @@
 #include "file-info-reader.h"
 #include "toggle-button.h"
 #include "slider.h"
+#include "film-view.h"
 #include "utils.h"
 
 typedef struct {
@@ -132,6 +133,8 @@ static void image_view_init(ui_widget_t *w)
                                w);
         slider_set_min(view->base.refs.slider, 10);
         slider_set_max(view->base.refs.slider, 800);
+        film_view_set_image_collector(view->base.refs.film_view,
+                              view->collector);
         image_view_update(w);
         ui_widget_on(ui_root(), "keydown", image_view_on_keydown, w);
 
@@ -315,6 +318,23 @@ static void image_view_on_prev(ui_widget_t *w, ui_event_t *e, void *arg)
 {
         image_view_t *view = image_view_get(e->data);
         image_collector_prev(view->collector);
+}
+
+static void image_view_on_film_view_toggle(ui_widget_t *w, ui_event_t *e,
+                                           void *arg)
+{
+        image_view_t *view = image_view_get(e->data);
+
+        if (ui_widget_is_visible(view->base.refs.film_view)) {
+                film_view_hide(view->base.refs.film_view);
+                toggle_button_set_checked(view->base.refs.toggle_film_view,
+                                          false);
+        } else {
+                film_view_show(view->base.refs.film_view);
+                toggle_button_set_checked(view->base.refs.toggle_film_view,
+                                          true);
+        }
+        image_view_update(e->data);
 }
 
 void image_view_load_file(ui_widget_t *w, const char *file)

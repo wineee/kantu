@@ -10,12 +10,14 @@ import {
   Save,
   ResizeImage,
   TableBottomRow,
+  TableBottomRowFilled,
   Info,
   Image,
 } from "@lcui/react-icons";
 import "@lcui/react-icons/dist/style.css";
 import ToggleButton from "./toggle-button";
 import Slider from "./slider";
+import FilmView from "./film-view";
 import "./image-view.scss";
 import "./global.css";
 
@@ -55,8 +57,16 @@ export default function ImageView() {
           <TriangleRightFilled />
         </Widget>
       </Widget>
+      <FilmView $ref="film_view" />
       <Widget className="toolbar">
-        <TableBottomRow className="icon button" />
+        <ToggleButton
+          $ref="toggle_film_view"
+          className="button"
+          onClick="image_view_on_film_view_toggle"
+        >
+          <TableBottomRow className="icon" />
+          <TableBottomRowFilled className="icon" />
+        </ToggleButton>
         <Widget className="divider" />
         <Info className="icon button mr-1" />
         <Widget className="file-info">
